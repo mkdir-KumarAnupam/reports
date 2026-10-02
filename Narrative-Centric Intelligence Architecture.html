@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Narrative-Centric Intelligence Architecture — Meeting Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f8fa;--panel:#fff;--ink:#14202b;--mute:#5b6b79;--line:#dbe3ea;--acc:#0f766e;--acc2:#e0f2ef;--warn:#b45309;--warn2:#fef3e2;--code:#eef3f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e151b;--panel:#151e26;--ink:#e6edf3;--mute:#93a3b1;--line:#27333d;--acc:#4fd1c0;--acc2:#12312e;--warn:#f0b35a;--warn2:#33260f;--code:#101920}}
+:root[data-theme="dark"]{--bg:#0e151b;--panel:#151e26;--ink:#e6edf3;--mute:#93a3b1;--line:#27333d;--acc:#4fd1c0;--acc2:#12312e;--warn:#f0b35a;--warn2:#33260f;--code:#101920}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 'Instrument Sans',system-ui,sans-serif}
+.wrap{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1240px;margin:0 auto}
+nav{position:sticky;top:env(safe-area-inset-top,0px);height:100vh;overflow:auto;padding:28px 18px;border-right:1px solid var(--line);font-size:13.5px}
+nav b{display:block;font:700 15px Sora,sans-serif;margin-bottom:14px}
+nav a{display:block;color:var(--mute);text-decoration:none;padding:3px 8px;border-radius:6px}
+nav a:hover,nav a:focus-visible{background:var(--acc2);color:var(--acc);outline:none}
+nav h6{margin:16px 8px 4px;font:600 12px Sora,sans-serif;color:var(--ink)}
+main{padding:48px clamp(18px,4vw,56px) 80px;min-width:0}
+header{padding-bottom:36px;border-bottom:1px solid var(--line);margin-bottom:12px}
+h1{font:700 clamp(30px,4.6vw,50px)/1.1 Sora,sans-serif;margin:0 0 16px;letter-spacing:-.02em;max-width:18ch}
+header p{max-width:62ch;color:var(--mute);font-size:18px;margin:0}
+section{padding:36px 0;border-bottom:1px solid var(--line)}
+h2{font:700 25px/1.25 Sora,sans-serif;margin:0 0 6px;letter-spacing:-.01em}
+h2 small{color:var(--acc);font-size:14px;margin-right:10px;font-weight:500}
+h3{font:600 17px Sora,sans-serif;margin:24px 0 6px}
+p,li{max-width:74ch}
+p{margin:10px 0}
+ul{padding-left:20px;margin:8px 0}
+.lead{color:var(--mute)}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;font:13px/1.5 'JetBrains Mono',monospace;margin:14px 0;max-width:100%}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin:14px 0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.card h4{margin:0 0 6px;font:600 15px Sora,sans-serif}
+.card p,.card ul{margin:4px 0;font-size:14.5px}
+.note{background:var(--warn2);border-left:3px solid var(--warn);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0;max-width:74ch}
+.key{background:var(--acc2);border-left:3px solid var(--acc);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0;max-width:74ch}
+.flow{display:flex;flex-wrap:wrap;gap:6px 0;align-items:center;margin:14px 0}
+.flow span{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 14px;font-size:14px}
+.flow span:not(:last-child)::after{content:"›";color:var(--acc);margin-left:14px;font-weight:700}
+.flow span:not(:last-child){border-right-color:var(--line)}
+.flow.hot span{border-color:var(--acc)}
+.tablewrap{overflow-x:auto;margin:14px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line)}
+th{font:600 13px Sora,sans-serif;background:var(--code)}
+.tag{display:inline-block;border-radius:999px;padding:1px 10px;font-size:12.5px;background:var(--acc2);color:var(--acc);white-space:nowrap}
+.tag.w{background:var(--warn2);color:var(--warn)}
+.tag.m{background:var(--code);color:var(--mute)}
+@media(max-width:860px){.wrap{display:block}nav{position:static;height:auto;border:0;border-bottom:1px solid var(--line)}nav .l{display:none}}
+</style></head>
+<body><div class="wrap">
+<nav aria-label="Contents"><b>Meeting report</b>
+<h6>Foundations</h6><a href="#s1">Objective</a><a href="#s2">Current & revised pipeline</a><a href="#s3">Core model</a>
+<h6>Narrative engine</h6><a href="#s5">Formation & Jev + LLM</a><a href="#s9">Confidence caveat</a><a href="#s11">Narrative sentiment</a><a href="#s13">Summaries & clustering</a>
+<h6>Analytics</h6><a href="#s16">Temporal & lifecycle</a><a href="#s18">Demographics & regions</a><a href="#s20">Network & bots</a>
+<h6>Search & risk</h6><a href="#s23">Search-term extraction</a><a href="#s26">Hallucination control</a>
+<h6>Product</h6><a href="#s27">Data model</a><a href="#s28">Dashboard & UX</a><a href="#s30">Caching & storage</a>
+<h6>Planning</h6><a href="#s32">Blockchain</a><a href="#s33">Full architecture</a><a href="#s35">Status & team</a><a href="#s37">Decisions</a><a href="#s38">Open questions</a><a href="#s40">Outcome</a>
+</nav>
+<main>
+<header><h1>From trend analytics to narrative intelligence</h1>
+<p>Report of the architecture and methodology meeting. The central shift: Trend → Multiple Narratives → Narrative-level Analysis, instead of treating every post in a trend as one homogeneous dataset.</p></header>
+
+<section id="s1"><h2><small>1</small>Meeting objective</h2>
+<p class="lead">The meeting refined the technical architecture and analytical methodology, covering:</p>
+<div class="grid">
+<div class="card"><ul><li>Cross-platform scraping and normalization</li><li>Trend detection and lifecycle analysis</li><li>Narrative discovery and classification</li><li>Narrative-level sentiment</li><li>Demographic and regional analysis</li></ul></div>
+<div class="card"><ul><li>Network analysis</li><li>Hybrid deterministic/LLM reasoning using Jev</li><li>Handling previously unseen narratives</li><li>Ambiguity and hallucination control</li><li>Bot / coordinated-activity detection</li></ul></div>
+<div class="card"><ul><li>Narrative clustering</li><li>Search and caching strategy</li><li>Report generation</li><li>Possible blockchain extensions</li><li>Division of implementation responsibilities</li></ul></div></div>
+<div class="key">The system should identify the different narratives within a trend and analyze each narrative separately.</div></section>
+
+<section id="s2"><h2><small>2–3</small>Current and revised pipeline</h2>
+<h3>Currently implemented</h3>
+<div class="flow"><span>Scraping</span><span>Upstash Redis</span><span>Producer</span><span>Workers</span><span>PostgreSQL</span><span>Frontend (pending)</span></div>
+<p>Workers: Demographic, Network, Trend, Sentiment and Database. The existing database follows a relatively fixed schema. Frontend connection and final dashboard integration remain pending.</p>
+<h3>Revised analytical pipeline</h3>
+<p>Scraping stays largely unchanged. The key addition is a Normalization → Narrative Formation stage.</p>
+<div class="flow hot"><span>Scraping</span><span>Upstash Redis</span><span>Normalization</span><span>Producer</span><span>Workers</span><span>Trend Detection</span><span>Narrative Formation</span><span>Narrative-level Analysis</span></div>
+<p>Normalization converts posts from different platforms into a common internal representation, so the system avoids separate analytical pipelines per platform. Sources: X / Twitter, Reddit, Telegram, and other supported public sources.</p></section>
+
+<section id="s3"><h2><small>4</small>Core analytical model</h2>
+<pre>TREND
+  ├── Narrative A ── Tweet 1, Tweet 2, Tweet 3
+  ├── Narrative B ── Tweet 4, Tweet 5, Tweet 6
+  └── Narrative C ── Tweet 7, Tweet 8, Tweet 9</pre>
+<div class="key"><b>A trend is not itself a narrative. A trend contains multiple narratives.</b></div>
+<p>Example trend <code>#LPUProtest</code> could contain:</p>
+<div class="grid">
+<div class="card"><h4>Narrative A</h4><p>An incident occurred and requires investigation.</p></div>
+<div class="card"><h4>Narrative B</h4><p>The circulating claims are rumors and lack verified information.</p></div>
+<div class="card"><h4>Narrative C</h4><p>The incident is being framed as a political stunt.</p></div></div>
+<p class="lead">These are analytical categories derived from the discussed content, not conclusions the system should endorse.</p></section>
+
+<section id="s5"><h2><small>5–8</small>Narrative formation: hybrid Jev + LLM</h2>
+<p><b>The problem.</b> When a new trend appears, the narrative pool is empty, so there is nothing to classify incoming posts into. The proposed solution is a hybrid Jev + LLM architecture.</p>
+<div class="grid">
+<div class="card"><h4>Stage 1 — Jev classification</h4><p>A batch (about 30 tweets) is compared against the known narrative pool. If it clearly matches an existing narrative, Jev assigns it.</p></div>
+<div class="card"><h4>Stage 2 — No suitable narrative</h4><p>If Jev returns "none of the above" or null, the batch goes to an LLM / reasoning model, which generates a narrative and adds it to the pool. Future posts classify against it.</p></div></div>
+<div class="flow hot"><span>Posts</span><span>Jev</span><span>No suitable narrative</span><span>LLM</span><span>Generate narrative</span><span>Add to pool</span></div>
+<h3>Example</h3>
+<p>Incoming: "LPU administration should answer for this incident." / "The university needs to be held accountable." / "Administration must explain what happened."</p>
+<p>LLM-formed narrative: <i>"LPU administration should be held responsible/accountable for the incident."</i></p>
+<h3>The narrative pool evolves</h3>
+<div class="flow"><span>Empty</span><span>A, B, C</span><span>A, B, C, D, E…</span></div>
+<p>The pool lets the system adapt to narratives unknown when the trend first appeared.</p>
+<h3>Batch-based processing</h3>
+<p>The classification unit is about 30 posts. Each batch (1, 2, 3…) goes through Jev for narrative classification. Advantages:</p>
+<ul><li>Jev receives more contextual information.</li><li>Expensive reasoning is not run independently for every post.</li></ul></section>
+
+<section id="s9"><h2><small>9–10</small>Interpreting Jev confidence, and assigning posts</h2>
+<p>With 45 narratives, Jev might return: A → 0.60, B → 0.20, X → 0.10, Y → 0.05 …</p>
+<div class="note"><b>Not a probability distribution.</b> Narrative X → 10% does not mean 10% of tweets belong to X. It may mean Jev sees some semantic compatibility between X and the batch.<br><b>Confidence / compatibility score ≠ percentage of posts in a narrative.</b> This matters for backend data modeling and frontend visualization.</div>
+<h3>Desired output: Post → Narrative</h3>
+<p>Example: Tweet A → Narrative 1, Tweet B → Narrative 1, Tweet C → Narrative 2, Tweet D → Narrative 3. Batch-level Jev analysis assists classification, but storage must preserve the actual post-to-narrative relationship. That answers "Which posts support or discuss this narrative?" rather than only "Which narratives are present in this batch?"</p></section>
+
+<section id="s11"><h2><small>11–12</small>Narrative-level sentiment</h2>
+<p>The earlier two-tier sentiment model is replaced by a single Jev-based sentiment layer, applied per narrative.</p>
+<div class="flow hot"><span>Trend</span><span>Narratives</span><span>Posts in Narrative A</span><span>Jev</span><span>Sentiment of Narrative A</span></div>
+<div class="tablewrap"><table><tr><th>#LPUProtest narrative</th><th>Sentiment</th></tr>
+<tr><td>A — "Administration should be held responsible"</td><td><span class="tag w">Negative</span></td></tr>
+<tr><td>B — "Claims are unverified"</td><td><span class="tag m">Neutral / Uncertain</span></td></tr>
+<tr><td>C — "Political stunt"</td><td><span class="tag w">Negative</span></td></tr></table></div>
+<p>Two groups discussing the same trend can have completely different sentiment orientations.</p>
+<h3>Trend-level vs narrative-level analytics</h3>
+<div class="grid">
+<div class="card"><h4>Narrative-level</h4><ul><li>Narratives → Sentiment per narrative</li></ul></div>
+<div class="card"><h4>Trend-level</h4><ul><li>Demographics</li><li>Network analysis</li><li>Regional distribution</li><li>Lifecycle / forecasting</li></ul></div></div></section>
+
+<section id="s13"><h2><small>13–15</small>Summaries, clustering and discovery</h2>
+<h3>Two types of summaries</h3>
+<div class="grid">
+<div class="card"><h4>Trend summary</h4><ul><li>What is happening?</li><li>How rapidly is it growing?</li><li>Where is it occurring?</li><li>Which platforms are involved?</li><li>How large is the conversation?</li></ul></div>
+<div class="card"><h4>Narrative summary</h4><ul><li>What does it claim or discuss?</li><li>Which posts belong to it?</li><li>How much discussion surrounds it?</li><li>What sentiment is associated?</li><li>Who is propagating it?</li><li>How is it evolving?</li></ul></div></div>
+<p>The separation stops the trend summary from hiding disagreements or competing narratives.</p>
+<h3>Narrative clustering</h3>
+<p>Once enough narratives exist, semantically similar ones are grouped (for example 45 narratives → narrative groups).</p>
+<pre>Narrative Group: University Accountability
+ ├── LPU administration should be responsible
+ ├── Administration must answer
+ ├── University failed to act
+ └── Officials should explain the incident</pre>
+<p>A researcher searching "College Administration" can discover the related group. This keeps the dashboard from being overloaded with dozens of near-duplicate narratives.</p>
+<div class="flow hot"><span>Trend</span><span>Narrative Group</span><span>Individual Narratives</span><span>Posts</span></div>
+<h3>Researcher workflow</h3>
+<div class="flow"><span>Search trend / keyword</span><span>Trend report</span><span>Narrative groups</span><span>Individual narratives</span><span>Posts / evidence</span><span>Detailed analysis</span></div>
+<p>This supports live trend monitoring and historical research.</p></section>
+
+<section id="s16"><h2><small>16–17</small>Temporal analysis, lifecycle and forecasting</h2>
+<p>Supported periods: weekly, biweekly, monthly, quarterly, yearly, and multi-year / half-decade.</p>
+<div class="flow hot"><span>Emergence</span><span>Growth</span><span>Peak</span><span>Decline</span><span>Disappearance / persistence</span></div>
+<p>The same model applies to narratives and to trends. Forecasting of future trend behavior is a separate layer and an add-on, not the core narrative-classification mechanism.</p></section>
+
+<section id="s18"><h2><small>18–19</small>Demographics and regional distribution</h2>
+<h3>Demographics (mandatory)</h3>
+<p>Signals: Google Trends data, public profile information, age-related signals, profession, and other public context. Where direct data is missing, AI-assisted inference may fill gaps; roughly 60–70% might be inferable in suitable cases.</p>
+<div class="note">Inferred demographics must be clearly distinguished from directly provided ones and never presented as verified facts.</div>
+<h3>Regional distribution</h3>
+<div class="flow"><span>Trend</span><span>Regional distribution</span><span>India heatmap / regional map</span></div>
+<p>Uses Google Trends and other geographic signals, shown alongside narrative and sentiment information.</p></section>
+
+<section id="s20"><h2><small>20–22</small>Network analysis and coordination detection</h2>
+<h3>Network analysis</h3>
+<p>Core pipeline component. Models relationships such as User A → B → C → D, and broader structures: Users → Posts → Mentions / Replies / Shares → Network graph. Can be correlated with trend velocity and narrative propagation.</p>
+<h3>Bot / coordinated-activity detection (proposed add-on)</h3>
+<div class="grid">
+<div class="card"><h4>Option 1 — String similarity</h4><p>Compare the current post with historical posts; high similarity suggests potential coordination.</p></div>
+<div class="card"><h4>Option 2 — Recent batch similarity</h4><p>Cache the relevant posts from the previous five batches and compare the current batch. Near-identical variants such as "Justice for X", "Justice 4 X", "We need justice for X", "Justice must be given to X", combined with synchronized timing, are a signal.</p></div>
+<div class="card"><h4>Option 3 — Popularity / velocity</h4><p>Is the engagement plausible? Example: 100,000 interactions in 20 minutes, checked against account history, reach, typical engagement, trend velocity and cross-platform activity.</p></div></div>
+<div class="flow hot"><span>String similarity</span><span>Temporal similarity</span><span>Popularity anomaly</span><span>Trend velocity</span><span>Coordination signal</span></div>
+<div class="note">This is a signal, not definitive proof that accounts are bots.</div></section>
+
+<section id="s23"><h2><small>23–25</small>Search-term extraction and ambiguity</h2>
+<p><code>#JusticeForUpendra</code> naively tokenizes to Justice / For / Upendra. The system should isolate the meaningful entity with a higher relevance score:</p>
+<div class="tablewrap"><table><tr><th>Token</th><th>Relevance</th></tr><tr><td>Justice</td><td>0.01</td></tr><tr><td>For</td><td>0.04</td></tr><tr><td>Upendra</td><td>0.98</td></tr></table></div>
+<h3>Contextual disambiguation</h3>
+<p>Simple tokenization fails on ambiguous cases like <code>#TheRapistUpendra</code>, which can be misread without understanding the linguistic structure. Ambiguous cases go to a reasoning model that uses context and, where appropriate, external information.</p>
+<div class="flow hot"><span>Hashtag</span><span>Lexical parsing</span><span>Ambiguity detected</span><span>Reasoning model</span><span>Contextual interpretation</span><span>Search query</span><span>Google Trends / external data</span></div>
+<p>This builds a meaningful query instead of searching every token blindly.</p>
+<h3>Context saving</h3>
+<p>Avoid repeatedly sending large context packages to reasoning models. Provide the original post plus the necessary contextual references (Tweet/Post → Reasoning model → Contextual interpretation), reducing cost and latency.</p></section>
+
+<section id="s26"><h2><small>26</small>Hallucination as a core risk</h2>
+<p>The architecture separates deterministic / structured classification from generative narrative formation.</p>
+<div class="flow hot"><span>Jev: can an existing narrative explain this?</span><span>Yes → assign</span><span>No / null → LLM → candidate narrative → pool</span></div>
+<p>This stops the LLM from generating a new narrative for every batch and reduces uncontrolled narrative proliferation.</p></section>
+
+<section id="s27"><h2><small>27</small>Data modeling principle</h2>
+<div class="grid">
+<div class="card"><h4>Trend</h4><p>The broad topic being discussed.</p></div>
+<div class="card"><h4>Narrative</h4><p>A particular interpretation, claim, framing or storyline within a trend.</p></div>
+<div class="card"><h4>Post</h4><p>The underlying evidence / content.</p></div>
+<div class="card"><h4>Classification</h4><p>The relationship between a post and a narrative.</p></div></div>
+<p>A normalized design must not treat Narrative = Trend, because one trend holds many narratives.</p></section>
+
+<section id="s28"><h2><small>28–29</small>User experience and dashboard</h2>
+<div class="flow"><span>Landing page</span><span>Search query</span><span>Trend identified</span><span>Trend report dashboard</span><span>Narrative analysis</span><span>Sentiment</span><span>Lifecycle</span><span>Demographics</span><span>Network</span><span>Regional map</span></div>
+<p>The primary focus of the dashboard is narratives, because they explain how different groups interpret the same trend.</p>
+<pre>TREND REPORT
+├─ Trend Overview
+├─ Narrative Groups
+│    ├─ Narrative A
+│    ├─ Narrative B
+│    └─ Narrative C
+├─ Narrative Sentiment
+├─ Trend Lifecycle
+├─ Demographics
+├─ Network Graph
+└─ Regional Distribution</pre></section>
+
+<section id="s30"><h2><small>30–31</small>Caching and persistent storage</h2>
+<div class="grid">
+<div class="card"><h4>Redis</h4><p>Queueing, temporary state, caching: popular trends, recent narrative results, recent batches. Narratives from recently popular searches stay cached to cut latency.</p></div>
+<div class="card"><h4>PostgreSQL</h4><p>Persistent analytical records: trends, narratives, narrative groups, posts, sources, sentiments, demographics, regions, network relationships, trend metrics, forecasts, classification metadata.</p></div></div>
+<p class="lead">The exact schema is still to be finalized as the narrative architecture is implemented.</p></section>
+
+<section id="s32"><h2><small>32</small>Blockchain: proposed add-on</h2>
+<p>Not a confirmed part of the core architecture; its purpose is still undefined. The referenced paper is on <a href="https://ideas.repec.org/a/eee/transe/v135y2020ics1366554519315339.htm" style="color:var(--acc)">IDEAS/RePEc</a>. The page could not be retrieved while preparing the original report, so the team should read the paper directly before citing it in the SIH presentation or architecture.</p>
+<div class="flow hot"><span>Research paper</span><span>Aditi</span><span>Study methodology</span><span>Determine relevance</span><span>Identify application</span><span>Decide if technically justified</span></div>
+<div class="note">Blockchain should not be a technology showcase. It belongs only if it solves a specific problem such as provenance, integrity, auditability or tamper-evident analytical records.</div></section>
+
+<section id="s33"><h2><small>33–34, 39</small>Consolidated architecture and outputs</h2>
+<pre>DATA SOURCES: X · Reddit · Telegram · Other
+      ↓
+SCRAPING → NORMALIZATION → UPSTASH REDIS → PRODUCER
+      ↓
+WORKERS: Trend · Narrative · Sentiment · Demographic · Network · Database
+      ↓
+TREND DETECTION → NARRATIVE ENGINE → JEV
+      ├─ Existing narrative? YES → Classify
+      └─ NO → LLM → New narrative
+                 ↓
+           NARRATIVE POOL → NARRATIVE MAPPING
+                 ↓
+   Sentiment · Network · Demographics
+                 ↓
+   TREND LIFECYCLE → FORECASTING → REGIONAL ANALYSIS
+                 ↓
+           NARRATIVE GROUPS → POSTGRESQL
+                 ↓
+         DASHBOARD  |  REPORT</pre>
+<div class="grid">
+<div class="card"><h4>Interactive dashboard</h4><p>For exploration: Search → Trend → Narratives → Analysis.</p></div>
+<div class="card"><h4>Generated report</h4><p>For research and documentation: trend summary, narrative summary, sentiment, demographics, network, regional distribution, lifecycle and forecast.</p></div></div>
+<p>The project serves both as a monitoring platform and a research-oriented analytical system.</p></section>
+
+<section id="s35"><h2><small>35</small>Feature status</h2>
+<div class="tablewrap"><table><tr><th>Component</th><th>Status</th></tr>
+<tr><td>Scraping pipeline</td><td><span class="tag">Existing / retained</span></td></tr>
+<tr><td>Redis queue · Producer · Worker architecture</td><td><span class="tag">Existing</span></td></tr>
+<tr><td>Trend analysis · Network graph</td><td><span class="tag">Done</span></td></tr>
+<tr><td>Trend forecasting</td><td><span class="tag">Done; more possible</span></td></tr>
+<tr><td>Narrative formation</td><td><span class="tag m">Core architecture defined</span></td></tr>
+<tr><td>Narrative classification · Narrative-level sentiment</td><td><span class="tag m">Architecture defined</span></td></tr>
+<tr><td>Narrative pool</td><td><span class="tag m">Proposed core component</span></td></tr>
+<tr><td>Narrative clustering · Search-term disambiguation · Popular trend caching</td><td><span class="tag m">Proposed</span></td></tr>
+<tr><td>Demographics</td><td><span class="tag w">Planned / mandatory</span></td></tr>
+<tr><td>Regional distribution</td><td><span class="tag w">Planned via Google Trends</span></td></tr>
+<tr><td>PostgreSQL</td><td><span class="tag">Existing</span></td></tr>
+<tr><td>Frontend integration</td><td><span class="tag w">Pending</span></td></tr>
+<tr><td>Report generation</td><td><span class="tag m">Assigned</span></td></tr>
+<tr><td>Bot detection</td><td><span class="tag m">Proposed add-on</span></td></tr>
+<tr><td>Blockchain</td><td><span class="tag m">Research / add-on</span></td></tr></table></div>
+<h2 style="margin-top:34px"><small>36</small>Team responsibilities</h2>
+<div class="grid">
+<div class="card"><h4>Ashutosh + Ayush — Backend</h4><ul><li>Worker architecture, Redis pipeline</li><li>Producer/consumer flow</li><li>PostgreSQL integration</li><li>Narrative processing infrastructure</li><li>APIs for the frontend</li><li>Caching infrastructure</li></ul></div>
+<div class="card"><h4>Anupam — Architecture</h4><ul><li>Overall system and cross-component integration</li><li>Narrative architecture, Jev + LLM pipeline</li><li>Data flow and architectural decisions</li><li>Coordinating backend, frontend, research</li><li>Keeping the system coherent as features grow</li></ul></div>
+<div class="card"><h4>Upendra — Frontend</h4><ul><li>Frontend integration, narrative-centric dashboard</li><li>Trend report, narrative and sentiment visuals</li><li>Lifecycle, demographics, network graph</li><li>Regional map</li><li>Narrative grouping / clustering interface</li></ul></div>
+<div class="card"><h4>Soham — Report generation</h4><ul><li>Automated reports</li><li>Trend and narrative summaries</li><li>Report structure</li><li>Export / presentation-ready outputs</li><li>Linking analytics to reports</li></ul></div>
+<div class="card"><h4>Aditi — Implementation research</h4><ul><li>Paper analysis and literature review</li><li>Research-backed implementation strategies</li><li>Blockchain research</li><li>Judging whether additions are justified</li><li>Supplying references</li></ul></div></div></section>
+
+<section id="s37"><h2><small>37</small>Major technical decisions</h2>
+<div class="grid">
+<div class="card"><h4>Narrative is the central unit</h4><p>Trend → Narratives → Posts, not Trend → Posts.</p></div>
+<div class="card"><h4>Jev classifies known narratives</h4></div>
+<div class="card"><h4>LLM discovers new narratives</h4><p>Used when no suitable narrative exists.</p></div>
+<div class="card"><h4>Sentiment per narrative</h4><p>Not one score for the whole trend.</p></div>
+<div class="card"><h4>Confidence ≠ probability</h4><p>Not automatically a probability distribution.</p></div>
+<div class="card"><h4>Narrative groups</h4><p>A higher-level abstraction over individual narratives.</p></div>
+<div class="card"><h4>Contextual reasoning</h4><p>Ambiguous search terms require it.</p></div>
+<div class="card"><h4>Multi-signal bot detection</h4><p>Combine signals, not one heuristic.</p></div>
+<div class="card"><h4>Redis vs PostgreSQL</h4><p>Redis for transient, high-frequency state; PostgreSQL for persistent analytics.</p></div>
+<div class="card"><h4>Show the hierarchy</h4><p>The frontend should expose it clearly.</p></div></div></section>
+
+<section id="s38"><h2><small>38</small>Open questions</h2>
+<div class="grid">
+<div class="card"><h4>Narrative creation</h4><ul><li>What threshold makes Jev return "none of the above"?</li><li>How are duplicate narratives merged?</li><li>How is naming standardized?</li><li>How is pool growth bounded?</li></ul></div>
+<div class="card"><h4>Confidence</h4><ul><li>What does Jev's score represent?</li><li>Store as compatibility, confidence or another metric?</li><li>What threshold justifies assignment?</li></ul></div>
+<div class="card"><h4>LLM fallback</h4><ul><li>How is generated narrative quality validated?</li><li>How are hallucinated narratives prevented?</li><li>How is allegation-as-fact avoided?</li></ul></div>
+<div class="card"><h4>Narrative clustering</h4><ul><li>Which embedding / model?</li><li>When to cluster?</li><li>Can clusters change over time?</li></ul></div>
+<div class="card"><h4>Demographics</h4><ul><li>Which attributes are directly observable?</li><li>Which are inferred?</li><li>How is uncertainty shown?</li></ul></div>
+<div class="card"><h4>Bot detection</h4><ul><li>Which signals does each platform expose?</li><li>What makes a useful coordination signal?</li><li>How are false positives handled?</li></ul></div>
+<div class="card"><h4>Blockchain</h4><ul><li>What concrete problem does it solve?</li><li>What data should be immutable?</li><li>Is it needed versus append-only / audited storage?</li></ul></div></div></section>
+
+<section id="s40" style="border:0"><h2><small>40</small>Final meeting outcome</h2>
+<p>The project moves from conventional social-media trend analytics to a narrative-centric, cross-platform intelligence architecture.</p>
+<pre>Sources → Posts → Trends → Narratives → Narrative Groups
+  → Sentiment / Network / Demographics / Regional Signals
+  → Lifecycle &amp; Forecasting → Research Dashboard + Reports</pre>
+<p>The key innovation is hybrid narrative formation: the system can start with no predefined narratives, discover new ones when needed, and classify future content against the accumulated pool.</p>
+<div class="key">The project moves beyond "What is trending?" to: What narratives are forming around a trend, how are they evolving, who is participating, what sentiment surrounds each, where are they concentrated, and how is the conversation changing over time?</div>
+<p><b>Immediate workstreams:</b> backend narrative infrastructure, frontend narrative visualization, automated reporting, and research validation.</p></section>
+</main></div></body></html>
